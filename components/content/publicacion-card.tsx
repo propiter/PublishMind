@@ -7,7 +7,6 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { motion } from 'framer-motion';
 import { Calendar, User, Clock } from 'lucide-react';
-
 import { Publicacion } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
@@ -55,7 +54,6 @@ export function PublicacionCard({
   const imageWidth = imageDimensions[variant].width;
   const imageHeight = imageDimensions[variant].height;
 
-  // Extract a brief excerpt from the content
   const excerpt = contenido?.content?.[0]?.content?.[0]?.value?.slice(0, 150) + '...' || '';
   
   return (
@@ -90,6 +88,9 @@ export function PublicacionCard({
               height={imageHeight}
               className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
               priority={variant === 'featured'}
+              loading={variant === 'featured' ? 'eager' : 'lazy'}
+              sizes={`(max-width: 768px) 100vw, ${imageWidth}px`}
+              quality={variant === 'featured' ? 85 : 75}
             />
           </div>
         </Link>
