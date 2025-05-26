@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -50,6 +51,7 @@ export function PublicationForm({ categorias }: { categorias: Categoria[] }) {
   const [promptIdea, setPromptIdea] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const { toast } = useToast();
+  const router = useRouter();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -80,25 +82,14 @@ export function PublicationForm({ categorias }: { categorias: Categoria[] }) {
   const onSubmit = async (values: FormValues) => {
     setIsSubmitting(true);
     try {
-      const formData = new FormData();
-      Object.entries(values).forEach(([key, value]) => {
-        if (value instanceof File) {
-          formData.append(key, value);
-        } else if (Array.isArray(value)) {
-          formData.append(key, JSON.stringify(value));
-        } else if (value instanceof Date) {
-          formData.append(key, value.toISOString());
-        } else {
-          formData.append(key, value as string);
-        }
-      });
-
-      const response = await fetch(process.env.N8N_WEBHOOK_MANUAL || '', {
+      // Envío manual
+      const response = await fetch('/api/submit-publication', {
         method: 'POST',
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(values),
       });
 
-      if (!response.ok) throw new Error('Error al enviar la publicación');
+      if (!response.ok) throw new Error('Error al enviar publicación');
 
       const data = await response.json();
       
@@ -107,11 +98,7 @@ export function PublicationForm({ categorias }: { categorias: Categoria[] }) {
         description: "Tu publicación está siendo procesada y se publicará pronto.",
       });
 
-      if (data.slug) {
-        setTimeout(() => {
-          window.location.href = `/publicacion/${data.slug}`;
-        }, 2000);
-      }
+      redirectToPublication(data.slug);
     } catch (error) {
       console.error('Error:', error);
       toast({
@@ -129,7 +116,7 @@ export function PublicationForm({ categorias }: { categorias: Categoria[] }) {
     setIsGenerating(true);
     
     try {
-      const response = await fetch(process.env.N8N_WEBHOOK_AUTO || '', {
+      const response = await fetch('/api/generate-content', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -139,25 +126,39 @@ export function PublicationForm({ categorias }: { categorias: Categoria[] }) {
       });
 
       if (!response.ok) throw new Error('Error al generar contenido');
-
-      const { title, content } = await response.json();
+      
+      const { title, content, imageUrl, slug } = await response.json();
       
       form.setValue('titulo', title);
       form.setValue('contenido', content);
       
+      if (imageUrl) {
+        // Optionally handle image if returned from webhook
+        form.setValue('imagen', imageUrl);
+      }
+      
+      redirectToPublication(slug);
+      
       toast({
-        title: "¡Contenido generado!",
-        description: "Revisa y edita el contenido generado antes de publicar.",
+        title: 'Contenido generado',
+        description: 'La publicación fue creada exitosamente',
       });
     } catch (error) {
-      console.error('Error:', error);
       toast({
-        title: "Error",
-        description: "Ocurrió un error al generar el contenido. Por favor, intenta de nuevo.",
-        variant: "destructive",
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Error desconocido',
+        variant: 'destructive',
       });
     } finally {
       setIsGenerating(false);
+    }
+  };
+
+  const redirectToPublication = (slug: string | undefined) => {
+    if (slug) {
+      setTimeout(() => {
+        router.push(`/publicacion/${slug}`);
+      }, 2000);
     }
   };
 
