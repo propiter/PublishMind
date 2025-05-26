@@ -58,7 +58,7 @@ export default async function TagPage({ params }: TagPageProps) {
       <SiteHeader categorias={categorias} />
       
       <section className="pb-12 pt-36 md:pt-40">
-        <div className="container">
+        <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-6 flex items-center space-x-2 text-sm text-muted-foreground">
             <a href="/" className="transition-colors hover:text-foreground">
               Inicio

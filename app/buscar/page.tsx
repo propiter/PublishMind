@@ -90,7 +90,7 @@ export default function BuscarPage() {
       <SiteHeader categorias={categorias} />
       
       <div className="pb-12 pt-36 md:pt-40">
-        <div className="container">
+        <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="mb-6 text-3xl font-extrabold tracking-tight sm:text-4xl">
             Buscar contenido
           </h1>

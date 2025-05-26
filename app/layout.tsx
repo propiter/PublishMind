@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/components/ui/theme-provider';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { Toaster } from "@/components/ui/toaster";
 import { defaultMetadata } from '@/components/seo/metadata';
+import { Analytics } from '@/components/analytics';
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -20,16 +21,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={`${inter.className} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <div className="flex min-h-screen flex-col">
-            <main className="flex-1">
+          <div className="relative flex min-h-screen flex-col">
+            <div className="flex-1">
               {children}
-            </main>
+            </div>
             <SiteFooter />
             <Toaster />
           </div>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );

@@ -95,7 +95,7 @@ export default async function CategoriaPage({ params }: CategoriaPageProps) {
           <div className="absolute inset-0 bg-background/20 backdrop-blur-sm" />
         </div>
         
-        <div className="container relative z-10 max-w-5xl">
+        <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="mb-6 flex items-center space-x-2 text-sm text-muted-foreground text-white/70">
             <a href="/" className="transition-colors hover:text-white">
               Inicio
@@ -124,7 +124,7 @@ export default async function CategoriaPage({ params }: CategoriaPageProps) {
       
       {/* Publications */}
       <section className="py-12">
-        <div className="container">
+        <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {publicaciones.length > 0 ? (
             <>
               <h2 className="mb-8 text-3xl font-bold tracking-tight">

@@ -77,7 +77,7 @@ export default async function PublicacionPage({ params }: PublicacionPageProps) 
       
       <article className="pb-16 pt-36 md:pt-40">
         {/* Hero */}
-        <div className="container max-w-5xl">
+        <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link 
             href={`/categoria/${publicacion.fields.categoria.fields.slug}`}
             className="mb-3 inline-block text-sm font-medium uppercase tracking-wider text-primary hover:underline"
@@ -112,7 +112,7 @@ export default async function PublicacionPage({ params }: PublicacionPageProps) 
         </div>
         
         {/* Content */}
-        <div className="container max-w-3xl">
+        <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="prose prose-lg dark:prose-invert mx-auto">
             {renderRichText(publicacion.fields.contenido)}
           </div>
@@ -145,7 +145,7 @@ export default async function PublicacionPage({ params }: PublicacionPageProps) 
       {/* Related Publications */}
       {publicacionesRelacionadas.length > 0 && (
         <section className="border-t bg-muted/30 py-16">
-          <div className="container">
+          <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="mb-8 text-2xl font-bold tracking-tight">
               Publicaciones relacionadas
             </h2>
