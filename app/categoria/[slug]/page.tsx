@@ -6,7 +6,7 @@ import { SiteHeader } from '@/components/layout/site-header';
 import { PublicacionesGrid } from '@/components/content/publicaciones-grid';
 import { TagsCloud } from '@/components/content/tags-cloud';
 import { getCategoriaBySlug, getPublicaciones, getCategorias, getAllTags } from '@/lib/contentful';
-import { generateCategoriaMetadata } from '@/components/seo/metadata';
+import { generateCategoriaMetadata } from '@/lib/seo';
 import { Publicacion, Categoria, Imagen } from '@/lib/types';
 
 export const revalidate = 3600; // Revalidate every hour

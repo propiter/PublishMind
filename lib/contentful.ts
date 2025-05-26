@@ -152,30 +152,35 @@ export async function searchPublicaciones(
   query: string, 
   preview: boolean = false
 ): Promise<ContentfulResponse> {
-  const client = getClient(preview);
-  if (!client) {
-    throw new Error('Contentful client not initialized');
-  }
-
-  const searchQuery = query.toLowerCase().trim();
-
+  console.log('Iniciando búsqueda en Contentful para:', query);
   try {
+    const client = getClient(preview);
+    if (!client) {
+      throw new Error('Contentful client not initialized - check environment variables');
+    }
+
+    console.log('Parámetros de búsqueda enviados a Contentful:', {
+      content_type: 'publicacion',
+      'fields.titulo[contains]': query.toLowerCase().trim(),
+      'fields.contenido[exists]': true,
+      'fields.autor[match]': query.toLowerCase().trim(),
+      order: ['-sys.createdAt']
+    });
+
     const response = await client.getEntries({
       content_type: 'publicacion',
       limit: 12,
       include: 2,
-      'query': searchQuery,
-      'fields.titulo[match]': searchQuery,
-      'fields.contenido[match]': searchQuery,
-      'fields.autor[match]': searchQuery,
-      'fields.tags[in]': searchQuery,
-      'fields.categoria.fields.nombre[match]': searchQuery,
+      'fields.titulo[contains]': query.toLowerCase().trim(),
+      'fields.contenido[exists]': true,
+      'fields.autor[match]': query.toLowerCase().trim(),
       order: ['-sys.createdAt']
     });
 
+
     return response as unknown as ContentfulResponse;
   } catch (error) {
-    console.error('Search error:', error);
+    console.error('Error en searchPublicaciones:', error);
     return {
       items: [],
       total: 0,

@@ -10,7 +10,7 @@ import { PublicacionCard } from '@/components/content/publicacion-card';
 import { SocialShareButtons } from '@/components/content/social-share-buttons';
 import { getPublicacionBySlug, getPublicaciones, getCategorias } from '@/lib/contentful';
 import { renderRichText } from '@/lib/richText';
-import { generatePublicacionMetadata } from '@/components/seo/metadata';
+import { generatePublicacionMetadata } from '@/lib/seo';
 import { Publicacion } from '@/lib/types';
 import { ScrollToTopButton } from '@/components/ui/scroll-to-top-button';
 

@@ -1,10 +1,12 @@
 import { Metadata } from 'next';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 import { notFound } from 'next/navigation';
-
 import { SiteHeader } from '@/components/layout/site-header';
 import { PublicacionesGrid } from '@/components/content/publicaciones-grid';
+
 import { getPublicaciones, getCategorias, getAllTags } from '@/lib/contentful';
-import { generateTagMetadata } from '@/components/seo/metadata';
+import { generateTagMetadata } from '@/lib/seo';
 import { Publicacion } from '@/lib/types';
 
 export const revalidate = 3600; // Revalidate every hour

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
@@ -7,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { searchPublicaciones } from '@/lib/contentful';
 
 interface SearchResult {
   sys: {
@@ -47,8 +50,9 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
-  const search = useCallback(
+  const handleSearch = useCallback(
     debounce(async (searchQuery: string) => {
+      console.log('Búsqueda iniciada con query:', searchQuery);
       if (!searchQuery.trim()) {
         setResults([]);
         return;
@@ -56,16 +60,17 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
 
       setIsLoading(true);
       try {
-        const response = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`);
-        const data = await response.json();
-        setResults(data.items);
+        console.log('Llamando a searchPublicaciones...');
+        const searchResults = await searchPublicaciones(searchQuery);
+        console.log('Resultados recibidos:', searchResults);
+        setResults(searchResults.items);
       } catch (error) {
-        console.error('Search failed:', error);
+        console.error('Error en la búsqueda:', error);
         setResults([]);
       } finally {
         setIsLoading(false);
       }
-    }, 300),
+    }, 500),
     []
   );
 
@@ -81,8 +86,8 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
   }, [isOpen]);
 
   useEffect(() => {
-    search(query);
-  }, [query, search]);
+    handleSearch(query);
+  }, [query, handleSearch]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
